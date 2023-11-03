@@ -10,8 +10,8 @@ app.use(cors());
 app.use(express.json());
 
 
-const mongoURI = process.env.mongoURI;
-mongoose.connect(mongoURI);
+const mongoURI_english = process.env.mongoURI_english
+mongoose.connect(mongoURI_english);
 const connection = mongoose.connection;
 connection.once('open', () => {
     console.log("MongoDB connection established");
