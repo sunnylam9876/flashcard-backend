@@ -90,6 +90,23 @@ app.get('/getwordbyuser/:user', (req, res) => {
         .catch((err) => res.status(400).json('Error: ' + err));
 });
 
+//----------------------------------------------------------------------------------
+// Delete word by object ID
+//----------------------------------------------------------------------------------
+app.delete("/delete", async (req, res) => {
+    const id = req.body.id;
+    //const objectId = mongoose.Types.ObjectId(id);
+
+    console.log("Delete: " + id);
+
+    await wordModel.findByIdAndDelete(id)
+        .then(() => res.json('Deleted'))
+        .catch((err) => res.status(400).json('Error: ' + err));
+});
+
+
+
+
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 })
