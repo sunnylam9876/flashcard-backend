@@ -87,7 +87,7 @@ app.post('/add', async(req, res) => {
 //----------------------------------------------------------------------------------
 app.get('/getwordbyuser/:user', (req, res) => {
     //display the user in console
-    console.log("User: " + req.params.user);
+    console.log("Get word by user: " + req.params.user);
     const user = req.params.user;
 
     //find all the records that belong to the user
