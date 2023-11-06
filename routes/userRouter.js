@@ -69,6 +69,29 @@ router.route('/login').post(async (req, res) => {
 });
 
 
+// ---------------------------------------------------------
+// get all user name
+// ---------------------------------------------------------
+router.route('/getallusers').get(async (req, res) => {
+    console.log('List all users');
+
+    try {
+        // get all the record
+        const existingUser = await userModel.find({});
+
+        if (existingUser.length > 0) {
+            // return a JSON response with the list of users
+            return res.status(200).json(existingUser.map(user => user.userId));
+        } else {
+            return res.status(404).json({error: "User not found"});
+        }
+    } catch {
+        console.error('Error: ', err);
+        res.status(500).json({error: 'Error in getting information'})
+    }    
+});
+   
+
 
 
 module.exports = router;
