@@ -16,7 +16,8 @@ const url = 'https://www.dictionaryapi.com/api/v3/references/collegiate/json/';
 const key = '?key=fbc92ada-4089-44e4-bba9-c9f6ae2f96b9';
 
 // connet to my MongoDB
-const mongoURI_english = process.env.mongoURI_english
+//const mongoURI_english = process.env.mongoURI_english
+const mongoURI_english = 'mongodb+srv://twoods9876:LDwdKVW7suXOXXp5@cluster0.nqmpo3r.mongodb.net/flashcard';
 mongoose.connect(mongoURI_english);
 const connection = mongoose.connection;
 connection.once('open', () => {
@@ -28,6 +29,8 @@ const userRouter = require('./routes/userRouter');
 
 // adding routes
 app.use('/user', userRouter);
+
+
 
 
 //----------------------------------------------------------------------------------
