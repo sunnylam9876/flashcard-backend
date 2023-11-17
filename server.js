@@ -31,6 +31,30 @@ const userRouter = require('./routes/userRouter');
 app.use('/user', userRouter);
 
 
+// Define a list of possible JSONPath expressions
+const jsonpath = require('jsonpath');
+
+const possiblePaths = [
+    '$[*].hwi.prs[*].sound.audio'
+
+    // Add more paths as needed
+];
+
+// Function to extract data using JSONPath
+function extractData(data, possiblePaths) {
+    for (const path of possiblePaths) {
+        try {
+            const result = jsonpath.query(data, path);
+            if (result.length > 0) {
+                return result[0]; // Return the first match found
+            }
+        } catch (error) {
+            // Handle exceptions as needed
+        }
+    }
+    return null; // Return null if data is not found in any path
+}
+
 
 
 //----------------------------------------------------------------------------------
@@ -48,27 +72,34 @@ app.post('/add', async(req, res) => {
             // check if the response data is an array and not empty
             if(Array.isArray(response.data) && response.data.length > 0) {
                 // extract the 'audio' field from the first item in the array
-
                 try{
-                    const audioField = response.data[0].hwi.prs[0].sound.audio;
-                    // pass the 'audio' field to a state variable named "audio"
-                    const audio = audioField;
+                    // get the id
+                    const returnId = response.data[0].meta.id;
+                    //console.log(returnId);
 
-                    //console.log(`Audio: ${audio}`);
-                    // create a new db object
-                    const wordObj = new wordModel({
-                        user,
-                        wordId,
-                        audio
-                    });
+                    if (returnId) {
+                        const audioPath = '$[*].hwi.prs[*].sound.audio';
+                        const audioValues = jsonpath.query(response.data, audioPath);
+                        //console.log("Extract value: " + audioValues[0]);
+                        const audio = audioValues[0];
 
-                    console.log("User: " + user + "; Word: " + wordId + "; Audio: " + audio);
+                        // pass the 'audio' field to a state variable named "audio"
 
-                    // save the new object
-                    wordObj
-                        .save()
-                        .then(() => res.json(audio))
-                        .catch((err) => res.status(400).json('Error: ' + err));
+                        // create a new db object
+                        const wordObj = new wordModel({
+                            user,
+                            wordId,
+                            audio
+                        });
+
+                        console.log("User: " + user + "; Word: " + wordId + "; Audio: " + audio);
+
+                        // save the new object
+                        wordObj
+                            .save()
+                            .then(() => res.json(audio))
+                            .catch((err) => res.status(400).json('Error: ' + err));
+                    }
                     
                 } catch {
                     console.error("No such word");
